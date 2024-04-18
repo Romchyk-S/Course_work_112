@@ -1,5 +1,6 @@
 library(ALL)
 library(geneset)
+library(genefilter)
 
 import::from(sum_for_T_stat.R, sum_for_T)
 import::from(trace_for_Q_stat.R, trace_for_Q)
@@ -10,9 +11,22 @@ import::from(trace_for_Q_stat.R, trace_for_Q)
 
 # BiocManager::install("ALLMLL")
 
+# BiocManager::install("genefilter")
+
 data(ALL)
 
-print(ALL)
+subset <- intersect(grep("^B", as.character(ALL$BT)),
+                    + which(ALL$mol %in% c("BCR/ABL", "NEG")))
+ALL <- ALL[, subset]
+
+# from Gentleman et al. "Bioinformatics and Computational Biology Solutions Using R and Bioconductor"
+# remove not expressed and low variability genes
+f1 <- pOverA(0.25, log2(100))
+f2 <- function(x) (IQR(x) > 0.5)
+ff <- filterfun(f1, f2)
+selected <- genefilter(ALL, ff)
+sum(selected)
+ALL <- ALL[selected, ]
 
 # кількість генів
 print("genes:")
@@ -30,80 +44,83 @@ ALL1 <- data.frame(ALL)
 
 ALL_BCRABL = ALL1[ALL$mol.biol == 'BCR/ABL', ]
 
-n_1 = length(ALL_BCRABL$X1000_at);
+n_1 = length(ALL_BCRABL$X1005_at);
 
 print("BCR/ABL patients:")
 print(n_1)
 
-# print(ALL_BCRABL$X1000_at)
-
 ALL_NEG = ALL1[ALL$mol.biol == 'NEG', ]
 
-n_2 = length(ALL_NEG$X1000_at);
+n_2 = length(ALL_NEG$X1005_at);
 
 print("NEG patients:")
 print(n_2)
 
-# print(ALL_NEG$X1000_at)
 
 i = 1
 
 while (i<length(ALL_BCRABL)){
-  
+
   X1 = ALL_BCRABL[i]
   X2 = ALL_NEG[i]
-  
-  sign_level = 95
-  
+
+  sign_level = 0.05
+
   sum_x1 <- sum_for_T(X1, X1)
 
   sum_x2 <- sum_for_T(X2, X2)
-  
+
   sum_X1X2 <- sum_for_T(X1, X2)
-  
+
   T_n = sum_X1 + sum_X2 + sum_X1X2
-  
-  
-  
+
+
+
   trace_X1 <- trace_for_Q(X1, X1)
-  
+
   trace_X2 <- trace_for_Q(X2, X2)
-  
+
   trace_X1X2 <- trace_for_Q(X1, X2)
-  
+
   sigma_n = trace_X1 + trace_X2 + trace_X1X2
-  
+
   Q_n = T_n / sigma_n
-   
+
   print("T_n = ")
-  
+
   print(T_n)
-  
+
   print("Q_n = ")
-  
+
   print(Q_n)
-  
-  # якщо Q_n > xi_a, де xi_a верхній sign_level квантиль розподілу N(0,1) 
+
+  # якщо Q_n > xi_a, де xi_a верхній sign_level квантиль розподілу N(0,1)
   # (d-вимірного? як знайти d?), то відкидається H_0, середні не рівні
-  
-  print(" ") 
-  
+
+  print(" ")
+
   i = i+1
+  
+  break
 }
 
-# bp = getGO(data_dir = tempdir(), ont="bp")
-# print(summary(bp))
-# 
+bp = getGO(data_dir = tempdir(), ont="bp")
+print(summary(bp))
+
 # print(colnames(bp$geneset))
-# 
+
 # print(bp$geneset$gene)
-# 
-# print(length(unique(unlist(bp$geneset$bp, use.names = FALSE))))
-# 
-# mf = getGO(data_dir = tempdir(), ont="mf")
-# print(summary(mf))
-# 
-# cc = getGO(data_dir = tempdir(), ont="cc")
-# print(summary(cc))
-# 
+
+print(length(unique(unlist(bp$geneset$bp, use.names = FALSE))))
+
+mf = getGO(data_dir = tempdir(), ont="mf")
+print(summary(mf))
+
+print(length(unique(unlist(mf$geneset$mf, use.names = FALSE))))
+
+cc = getGO(data_dir = tempdir(), ont="cc")
+print(summary(cc))
+
+print(length(unique(unlist(cc$geneset$cc, use.names = FALSE))))
+
 # print(cc$geneset)
