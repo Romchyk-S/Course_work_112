@@ -32,6 +32,8 @@ ALL <- ALL[selected, ]
 print("genes:")
 print(length(row.names(exprs(ALL))))
 
+# print(row.names(exprs(ALL)))
+
 # кількість пацієнтів
 print("patients:")
 print(length(colnames(exprs(ALL))))
@@ -59,12 +61,18 @@ print(n_2)
 
 i = 1
 
+sum_X1 = 0
+sum_X2 = 0
+sum_X1X2 = 0
+
 while (i<length(ALL_BCRABL)){
 
   X1 = ALL_BCRABL[i]
   X2 = ALL_NEG[i]
 
   sign_level = 0.05
+  
+  # Bonferroni correction
 
   sum_x1 <- sum_for_T(X1, X1)
 
@@ -81,10 +89,15 @@ while (i<length(ALL_BCRABL)){
   trace_X2 <- trace_for_Q(X2, X2)
 
   trace_X1X2 <- trace_for_Q(X1, X2)
+  
 
-  sigma_n = trace_X1 + trace_X2 + trace_X1X2
+  sigma_n = (2/(n_1*(n_1-1)))*trace_X1 + (2/(n_2*(n_2-1)))*trace_X2 + (4/(n_1*n_2))*trace_X1X2
+  
+  print(sigma_n)
+  
+  print(sqrt(sigma_n))
 
-  Q_n = T_n / sigma_n
+  Q_n = T_n / sqrt(sigma_n)
 
   print("T_n = ")
 
@@ -95,32 +108,38 @@ while (i<length(ALL_BCRABL)){
   print(Q_n)
 
   # якщо Q_n > xi_a, де xi_a верхній sign_level квантиль розподілу N(0,1)
-  # (d-вимірного? як знайти d?), то відкидається H_0, середні не рівні
+  #, то відкидається H_0, середні не рівні
 
   print(" ")
 
   i = i+1
   
-  break
+  # break
 }
 
 bp = getGO(data_dir = tempdir(), ont="bp")
 print(summary(bp))
 
-# print(colnames(bp$geneset))
+# print(row.names(bp$geneset_name))
 
 # print(bp$geneset$gene)
 
-print(length(unique(unlist(bp$geneset$bp, use.names = FALSE))))
+# print(bp$geneset$gene)
 
-mf = getGO(data_dir = tempdir(), ont="mf")
-print(summary(mf))
+# print(length(unique(unlist(bp$geneset$bp, use.names = FALSE))))
+# 
+# mf = getGO(data_dir = tempdir(), ont="mf")
+# print(summary(mf))
+# 
+# print(length(unique(unlist(mf$geneset$mf, use.names = FALSE))))
+# 
+# cc = getGO(data_dir = tempdir(), ont="cc")
+# print(summary(cc))
+# 
+# print(length(unique(unlist(cc$geneset$cc, use.names = FALSE))))
 
-print(length(unique(unlist(mf$geneset$mf, use.names = FALSE))))
-
-cc = getGO(data_dir = tempdir(), ont="cc")
-print(summary(cc))
-
-print(length(unique(unlist(cc$geneset$cc, use.names = FALSE))))
+tykin <- unique(lookup("GO:0004713", "hgu95av2",
+                       + "GO2ALLPROBES"))
+print(tykin)
 
 # print(cc$geneset)
