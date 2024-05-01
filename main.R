@@ -1,6 +1,7 @@
 library(ALL)
 library(geneset)
 library(genefilter)
+library(tidyverse)
 
 import::from(sum_for_T_stat.R, sum_for_T)
 import::from(trace_for_Q_stat.R, trace_for_Q)
@@ -76,29 +77,28 @@ samplegenes = sample(colnames(ALL_BCRABL), 6)
 
 colors = c('black', 'red')
 
+plotsymbol = 19
+
 for(gene1 in samplegenes)
 {
   for(gene2 in samplegenes)
   {
     if(!identical(gene1, gene2))
     {
-      plot(ALL_BCRABL[,gene1], ALL_BCRABL[,gene2], pch = 19, col = colors[1], xlab = gene1, ylab = gene2)
-      points(ALL_NEG[,gene1], ALL_NEG[,gene2], pch = 19, col = colors[2])
+      plot(ALL_BCRABL[,gene1], ALL_BCRABL[,gene2], pch = plotsymbol, col = colors[1], cex = 1.5, xlab = gene1, ylab = gene2)
+      points(ALL_NEG[,gene1], ALL_NEG[,gene2], pch = plotsymbol, cex = 1.5, col = colors[2])
       
-      legend(x = "topleft", title = "Leukemia classes", legend = c("BCR/ABL", "NEG"), col = c(colors[1], colors[2]), lwd = 1, lty = c(0,0,0))
+      legend(x = "topleft", title = "Leukemia classes", legend = c("BCR/ABL", "NEG"), col = c(colors[1], colors[2]), cex = 0.75, pch = plotsymbol)
     }
   }
 }
 
-# 
-# i = 1
-# 
-# X1 = ALL_BCRABL
-# X2 = ALL_NEG
-# 
-# 
-# sign_level = 0.05
-# 
+X1 = ALL_BCRABL
+X2 = ALL_NEG
+
+
+sign_level = 0.05
+
 # sum_X1 = sum_for_T(X1, X1)
 # 
 # sum_X2 = sum_for_T(X2, X2)
@@ -109,28 +109,27 @@ for(gene1 in samplegenes)
 # 
 # print(" ")
 
-# 
-# trace_X1 <- trace_for_Q(X1, X1)
-#
-# trace_X2 <- trace_for_Q(X2, X2)
-#
-# trace_X1X2 <- trace_for_Q(X1, X2)
-#
-# print("traces")
-#
-# print(trace_X1)
-#
-# print(trace_X2)
-#
-# print(trace_X1X2)
-#
-#
-# sigma_n = (2/(n_1*(n_1-1)))*trace_X1 + (2/(n_2*(n_2-1)))*trace_X2 + (4/(n_1*n_2))*trace_X1X2
-#
-# print(sigma_n)
-#
-# print(sqrt(sigma_n))
-#
+
+trace_X1 = trace_for_Q(X1, X1)
+
+trace_X2 = trace_for_Q(X2, X2)
+
+trace_X1X2 = trace_for_Q(X1, X2)
+
+print("traces")
+
+print(trace_X1)
+
+print(trace_X2)
+
+print(trace_X1X2)
+
+sigma_n = (2/(n_1*(n_1-1)))*trace_X1 + (2/(n_2*(n_2-1)))*trace_X2 + (4/(n_1*n_2))*trace_X1X2
+
+print(sigma_n)
+
+print(sqrt(sigma_n))
+
 # Q_n = T_n / sqrt(sigma_n)
 #
 # print("T_n = ")
