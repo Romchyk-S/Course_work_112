@@ -5,7 +5,13 @@ trace_for_Q <- function(X1, X2)
   trace = 0
   
   n1 = length(rownames(X1))
+  
+  # print(rownames(X1))
+  
   n2 = length(rownames(X2))
+  
+  print("n1")
+  print(n1)
   
   if(identical(X1, X2)) {
     
@@ -28,7 +34,11 @@ trace_for_Q <- function(X1, X2)
           
           sample_mean = mean(X1copy)
           
-          trace = trace + (X1[j,1]-sample_mean)*X1_transpose[1,j]*(X1[k,1]-sample_mean)*X1_transpose[1,k]
+          trace = (X1[j,1]-sample_mean)%*%X1_transpose[1,j]%*%(X1[k,1]-sample_mean)%*%X1_transpose[1,k]
+          
+          print("trace = ")
+          
+          print(trace)
         }
 
         k = k+1
@@ -66,7 +76,11 @@ trace_for_Q <- function(X1, X2)
         
         sample_mean_2 = mean(X2copy)
         
-        trace = trace + (X1[l,1]-sample_mean_1)*X1_transpose[1,l]*(X2[k,1]-sample_mean_2)*X2_transpose[1,k]
+        trace = (X1[j,1]-sample_mean)%*%X1_transpose[1,j]%*%(X1[k,1]-sample_mean)%*%X1_transpose[1,k]
+        
+        print("trace = ")
+        
+        print(trace)
     
         k = k+1
         

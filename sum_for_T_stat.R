@@ -1,47 +1,60 @@
+library(zoo)
+library(dplyr)
+
 sum_for_T <- function(X1, X2)
 {
-  i = 1
-  
   sum = 0
   
   n1 = length(rownames(X1))
   n2 = length(rownames(X2))
   
-  X1_transpose = t(X1)
+  print(n1)
   
-  while(i < n1){
-    
-    j = 1
-    
-    while(j < n2){
+  print(n2)
+
+  for(i in rownames(X1))
+  {
+
+    for(j in rownames(X2))
+    {
+      
+      X1_vector = as.numeric(c(X1[i,]))
+      
+      X2_vector = as.numeric(c(X2[j,]))
+      
+      X1_vector = na.spline(X1_vector)
+      
+      X2_vector = na.spline(X2_vector)
+      
       if(identical(X1, X2))
       {
-        if(i != j)
-        {
-          sum = sum + X1_transpose[1,i]*X2[j,1]
-        }
+         if (i != j)
+          {
+          sum = sum + t(X1_vector)%*%X2_vector
+         }
       }
       else
       {
-        sum = sum + X1_transpose[1,i]*X2[j,1]
+        sum = sum + t(X1_vector)%*%X2_vector
       }
-      
-      j = j+1
     }
-    
-    i = i+1
   }
   
+  print(sum)
+  
   if(identical(X1, X2))
-  {
-
+  { 
     sum = sum / (n1*(n1-1))
+    
   }
   else
   {
     sum = -2*sum/(n1*n2)
   }
+
+  print(sum)
   
-  return(sum)
+  print(" ")
+
   
 }

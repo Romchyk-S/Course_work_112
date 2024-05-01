@@ -15,6 +15,16 @@ import::from(trace_for_Q_stat.R, trace_for_Q)
 
 data(ALL)
 
+# кількість генів
+print("genes:")
+print(length(row.names(exprs(ALL))))
+
+# кількість пацієнтів
+
+print("patients:")
+print(length(colnames(exprs(ALL))))
+
+# from Gentleman et al. "Bioinformatics and Computational Biology Solutions Using R and Bioconducto
 subset <- intersect(grep("^B", as.character(ALL$BT)),
                     + which(ALL$mol %in% c("BCR/ABL", "NEG")))
 ALL <- ALL[, subset]
@@ -40,6 +50,8 @@ print(length(colnames(exprs(ALL))))
 
 ALL1 <- data.frame(ALL)
 
+# print(str(ALL1))
+
 # print(colnames(ALL1))
 
 # print(length(colnames(ALL1)))
@@ -58,88 +70,78 @@ n_2 = length(ALL_NEG$X1005_at);
 print("NEG patients:")
 print(n_2)
 
+set.seed(1)
 
-i = 1
+samplegenes = sample(colnames(ALL_BCRABL), 6)
 
-sum_X1 = 0
-sum_X2 = 0
-sum_X1X2 = 0
+colors = c('black', 'red')
 
-while (i<length(ALL_BCRABL)){
-
-  X1 = ALL_BCRABL[i]
-  X2 = ALL_NEG[i]
-
-  sign_level = 0.05
-  
-  # Bonferroni correction
-
-  sum_x1 <- sum_for_T(X1, X1)
-
-  sum_x2 <- sum_for_T(X2, X2)
-
-  sum_X1X2 <- sum_for_T(X1, X2)
-
-  T_n = sum_X1 + sum_X2 + sum_X1X2
-
-
-
-  trace_X1 <- trace_for_Q(X1, X1)
-
-  trace_X2 <- trace_for_Q(X2, X2)
-
-  trace_X1X2 <- trace_for_Q(X1, X2)
-  
-
-  sigma_n = (2/(n_1*(n_1-1)))*trace_X1 + (2/(n_2*(n_2-1)))*trace_X2 + (4/(n_1*n_2))*trace_X1X2
-  
-  print(sigma_n)
-  
-  print(sqrt(sigma_n))
-
-  Q_n = T_n / sqrt(sigma_n)
-
-  print("T_n = ")
-
-  print(T_n)
-
-  print("Q_n = ")
-
-  print(Q_n)
-
-  # якщо Q_n > xi_a, де xi_a верхній sign_level квантиль розподілу N(0,1)
-  #, то відкидається H_0, середні не рівні
-
-  print(" ")
-
-  i = i+1
-  
-  # break
+for(gene1 in samplegenes)
+{
+  for(gene2 in samplegenes)
+  {
+    if(!identical(gene1, gene2))
+    {
+      plot(ALL_BCRABL[,gene1], ALL_BCRABL[,gene2], pch = 19, col = colors[1], xlab = gene1, ylab = gene2)
+      points(ALL_NEG[,gene1], ALL_NEG[,gene2], pch = 19, col = colors[2])
+      
+      legend(x = "topleft", title = "Leukemia classes", legend = c("BCR/ABL", "NEG"), col = c(colors[1], colors[2]), lwd = 1, lty = c(0,0,0))
+    }
+  }
 }
 
-bp = getGO(data_dir = tempdir(), ont="bp")
-print(summary(bp))
-
-# print(row.names(bp$geneset_name))
-
-# print(bp$geneset$gene)
-
-# print(bp$geneset$gene)
-
-# print(length(unique(unlist(bp$geneset$bp, use.names = FALSE))))
 # 
-# mf = getGO(data_dir = tempdir(), ont="mf")
-# print(summary(mf))
+# i = 1
 # 
-# print(length(unique(unlist(mf$geneset$mf, use.names = FALSE))))
+# X1 = ALL_BCRABL
+# X2 = ALL_NEG
 # 
-# cc = getGO(data_dir = tempdir(), ont="cc")
-# print(summary(cc))
 # 
-# print(length(unique(unlist(cc$geneset$cc, use.names = FALSE))))
+# sign_level = 0.05
+# 
+# sum_X1 = sum_for_T(X1, X1)
+# 
+# sum_X2 = sum_for_T(X2, X2)
+# 
+# sum_X1X2 = sum_for_T(X1, X2)
+# 
+# T_n = sum_X1 + sum_X2 + sum_X1X2
+# 
+# print(" ")
 
-tykin <- unique(lookup("GO:0004713", "hgu95av2",
-                       + "GO2ALLPROBES"))
-print(tykin)
-
-# print(cc$geneset)
+# 
+# trace_X1 <- trace_for_Q(X1, X1)
+#
+# trace_X2 <- trace_for_Q(X2, X2)
+#
+# trace_X1X2 <- trace_for_Q(X1, X2)
+#
+# print("traces")
+#
+# print(trace_X1)
+#
+# print(trace_X2)
+#
+# print(trace_X1X2)
+#
+#
+# sigma_n = (2/(n_1*(n_1-1)))*trace_X1 + (2/(n_2*(n_2-1)))*trace_X2 + (4/(n_1*n_2))*trace_X1X2
+#
+# print(sigma_n)
+#
+# print(sqrt(sigma_n))
+#
+# Q_n = T_n / sqrt(sigma_n)
+#
+# print("T_n = ")
+# 
+# print(T_n)
+#
+# print("Q_n = ")
+#
+# print(Q_n)
+#
+# print(qnorm(1-sign_level/2))
+#
+# # якщо Q_n > xi_a, де xi_a верхній sign_level квантиль розподілу N(0,1)
+# #, то відкидається H_0, середні не рівні
