@@ -27,9 +27,7 @@ sum_for_T <- function(X1, X2)
       }
     }
   }
-  
-  print(sum)
-  
+
   if(identical(X1, X2))
   { 
     sum = sum / (n1*(n1-1))
@@ -39,10 +37,7 @@ sum_for_T <- function(X1, X2)
   {
     sum = -2*sum/(n1*n2)
   }
-
-  print(sum)
   
-  print(" ")
+  return(sum)
 
-  
 }
