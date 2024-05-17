@@ -6,14 +6,6 @@ library(tidyverse)
 import::from(sum_for_T_stat.R, sum_for_T)
 import::from(trace_for_Q_stat.R, trace_for_Q)
 
-# if (!require("BiocManager", quietly = TRUE))
-  
-#  install.packages("BiocManager")
-
-# BiocManager::install("ALLMLL")
-
-# BiocManager::install("genefilter")
-
 data(ALL)
 
 # кількість генів
@@ -37,6 +29,8 @@ ff <- filterfun(f1, f2)
 selected <- genefilter(ALL, ff)
 sum(selected)
 ALL <- ALL[selected, ]
+
+# print(summary(ALL))
 
 # кількість генів
 print("genes:")
@@ -62,7 +56,6 @@ n_2 = length(ALL_NEG$X1005_at);
 print("NEG patients:")
 print(n_2)
 
-
 X1 = ALL_BCRABL
 X2 = ALL_NEG
 
@@ -70,7 +63,13 @@ X2 = ALL_NEG
 X1 = X1[,1:(ncol(X1)-21)]
 X2 = X2[,1:(ncol(X2)-21)]
 
-set.seed(1)
+print(summary(t(X1)))
+
+print("")
+
+print(summary(t(X2)))
+
+# set.seed(1)
 
 samplegenes = sample(colnames(X1), 6)
 
@@ -124,17 +123,20 @@ print("Q_n = ")
 
 print(Q_n)
 
+Q_norm = qnorm(1-sign_level/2)
+
+print("Q_norm")
+
+print(Q_norm)
+
 print("Execution time")
 
 print(Sys.time()-start)
 
-Q_norm = qnorm(1-sign_level/2)
-
 if(Q_n > Q_norm)
 {
   print("Means are not equal")
-}
-else
+} else
 {
   print("Means are equal")
 }
