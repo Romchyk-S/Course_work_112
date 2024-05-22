@@ -91,55 +91,55 @@ for(gene1 in samplegenes)
   }
 }
 
-
-sign_level = 0.05
-
-start <- Sys.time()
-
-sum_X1 <- sum_for_T(X1, X1)
-
-sum_X2 <- sum_for_T(X2, X2)
-
-sum_X1X2 <- sum_for_T(X1, X2)
-
-T_n <- sum_X1 + sum_X2 + sum_X1X2
-
-trace_X1 <- trace_for_Q(X1, X1)
-
-trace_X2 <- trace_for_Q(X2, X2)
-
-trace_X1X2 <- trace_for_Q(X1, X2)
-
-
-sigma_n <- (2/(n_1*(n_1-1)))*trace_X1 + (2/(n_2*(n_2-1)))*trace_X2 + (4/(n_1*n_2))*trace_X1X2
-
-Q_n <- T_n / sqrt(sigma_n)
-
-print("T_n = ")
-
-print(T_n)
-
-print("Q_n = ")
-
-print(Q_n)
-
-Q_norm = qnorm(1-sign_level/2)
-
-print("Q_norm")
-
-print(Q_norm)
-
-print("Execution time")
-
-print(Sys.time()-start)
-
-if(Q_n > Q_norm)
-{
-  print("Means are not equal")
-} else
-{
-  print("Means are equal")
-}
+# 
+# sign_level = 0.05
+# 
+# start <- Sys.time()
+# 
+# sum_X1 <- sum_for_T(X1, X1)
+# 
+# sum_X2 <- sum_for_T(X2, X2)
+# 
+# sum_X1X2 <- sum_for_T(X1, X2)
+# 
+# T_n <- sum_X1 + sum_X2 + sum_X1X2
+# 
+# trace_X1 <- trace_for_Q(X1, X1)
+# 
+# trace_X2 <- trace_for_Q(X2, X2)
+# 
+# trace_X1X2 <- trace_for_Q(X1, X2)
+# 
+# 
+# sigma_n <- (2/(n_1*(n_1-1)))*trace_X1 + (2/(n_2*(n_2-1)))*trace_X2 + (4/(n_1*n_2))*trace_X1X2
+# 
+# Q_n <- T_n / sqrt(sigma_n)
+# 
+# print("T_n = ")
+# 
+# print(T_n)
+# 
+# print("Q_n = ")
+# 
+# print(Q_n)
+# 
+# Q_norm = qnorm(1-sign_level/2)
+# 
+# print("Q_norm")
+# 
+# print(Q_norm)
+# 
+# print("Execution time")
+# 
+# print(Sys.time()-start)
+# 
+# if(Q_n > Q_norm)
+# {
+#   print("Means are not equal")
+# } else
+# {
+#   print("Means are equal")
+# }
 
 # якщо Q_n > xi_a, де xi_a верхній sign_level квантиль розподілу N(0,1)
 #, то відкидається H_0, середні не рівні
