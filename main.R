@@ -81,27 +81,15 @@ colors = c('black', 'red')
 
 plotsymbol = 19
 
-x = seq(1, sample_genes_amount)
+x = seq(1, length(row.names(exprs(ALL))))
 
+plot(x, X1_means, pch = plotsymbol, col = colors[1], cex = 1.5, xlab = 'genes', ylab = 'expression level', type = 'l')
 
-plot(x, X1_means[samplegenes], pch = plotsymbol, col = colors[1], cex = 1.5, xlab = 'genes', ylab = 'expression level', xaxt = "n")
+title(main = 'Gene expression level means BCR/ABL')
 
-points(x, X2_means[samplegenes], pch = plotsymbol, col = colors[2], cex = 1.5)
+plot(x, X2_means, pch = plotsymbol, col = colors[2], cex = 1.5, type = 'l', xlab = 'genes', ylab = 'expression level')
 
-title(main = 'Gene expression level means scatter plot', xlab = 'genes', ylab = 'expression levels')
-
-text(x=x,  par("usr")[3], labels = samplegenes, pos = 1, xpd = TRUE)
-
-legend(x = "topleft", title = "Leukemia classes", legend = c("BCR/ABL", "NEG"), col = c(colors[1], colors[2]), cex = 0.75, pch = plotsymbol)
-
-
-df <- data.frame(BCRABL = as.numeric(X1_means[samplegenes]), NEG = as.numeric(X2_means[samplegenes]))
-
-df <- do.call(rbind, df)
-
-barplot(df, beside = TRUE, legend.text = rownames(df), args.legend = list(x='topleft'), col = colors, names = samplegenes)
-
-title(main = 'Gene expression level means barplot', xlab = 'genes', ylab = 'expression levels')
+title(main = 'Gene expression level means NEG')
 
 
 sign_level = 0.05
@@ -152,6 +140,3 @@ if(Q_n > Q_norm)
 {
   print("Means are equal")
 }
-
-# якщо Q_n > xi_a, де xi_a верхній sign_level квантиль розподілу N(0,1)
-#, то відкидається H_0, середні не рівні

@@ -17,10 +17,6 @@ sum_for_T <- function(X1, X2)
       
       X2_vector = as.numeric(c(X2[j,]))
       
-      X1_vector = na.spline(X1_vector)
-      
-      X2_vector = na.spline(X2_vector)
-      
       if(!(identical(X1, X2)) | i != j)
       {
         sum = sum + t(X1_vector)%*%X2_vector

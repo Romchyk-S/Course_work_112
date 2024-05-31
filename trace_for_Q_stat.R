@@ -21,10 +21,6 @@ trace_for_Q <- function(X1, X2)
       
       X2_vector = as.numeric(c(X2[j,]))
       
-      X1_vector = na.spline(X1_vector)
-      
-      X2_vector = na.spline(X2_vector)
-      
       if(identical(X1,X2))
       {
         X1_copy = data.matrix((X1[!(row.names(X1) %in% c(i,j)),]))
